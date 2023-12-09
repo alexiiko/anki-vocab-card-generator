@@ -7,7 +7,7 @@ response = requests.get(url)
 
 scraper = BeautifulSoup(response.text, "html.parser")
 
-span_vocab_class = scraper.find(id="highlight")
+span_vocab_class = scraper.find_all(class_="a-size-base-plus a-color-base")
 
 
 for vocab in span_vocab_class:
