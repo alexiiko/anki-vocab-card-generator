@@ -1,6 +1,6 @@
 # Anki card generator
 This is a terminal application for creating Anki cards based on highlights(vocabulary) made in e-books.
-It uses googletrans for translating the words.
+It uses [google trans](https://pypi.org/project/googletrans/)for translating the words and [genanki](https://github.com/kerrickstaley/genanki) for generating the cards.
 
 ## Prerequisites
 - Have [python](https://www.python.org/downloads/) installed
