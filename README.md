@@ -7,7 +7,8 @@ It uses googletrans for translating the words.
 - Have [google trans](https://pypi.org/project/googletrans/) installed
 
 ## How to use
-1. Get the highlights of the book in a json format.
+1. Clone the repository
+2. Get the highlights of the book in a json format.
 > Use [bookcision](https://readwise.io/bookcision) for the json file 
-2. Follow the instructions displayed in the terminal after running `anki_card_generator.py`.
-3. Import the `apkg` file into Anki.
+3. Follow the instructions displayed in the terminal after running `anki_card_generator.py`.
+4. Import the `apkg` file into Anki.
