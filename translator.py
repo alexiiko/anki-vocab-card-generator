@@ -55,6 +55,7 @@ for entry in highlights:
 print()
 
 print("Translating words...")
+print()
 
 vocabs = []
 vocabs_translated = []
@@ -64,6 +65,9 @@ for index in range(len(marked_words)):
         marked_words_translated.append(translated_word.text)
         vocabs.append(marked_words[index])
         vocabs_translated.append(translated_word.text)
+
+        if index % 5 == 0:
+            print(f"Progress: {index}/{len(marked_words)}")
     except: 
         pass
 
