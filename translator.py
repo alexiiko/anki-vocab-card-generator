@@ -47,7 +47,7 @@ highlights = json_object["highlights"]
 
 for entry in highlights:
     try:
-        marked_words.append(entry["text"].strip("!.,:;"))
+        marked_words.append(entry["text"].lower().lstrip("to").rstrip("’´,.;:_?!$%&/()[]{}+*#").strip("’´,.;:_?!$%&/()[]{}+*#"))
     except:
         print("ERROR: Json file does not correspond to the json schema.")
         exit()
@@ -59,6 +59,7 @@ print()
 
 vocabs = []
 vocabs_translated = []
+counter = 0
 for index in range(len(marked_words)):
     try:
         translated_word = translator.translate(marked_words[index], dest=DEST_LANG, src=SOURCE_LANG)
@@ -66,11 +67,15 @@ for index in range(len(marked_words)):
         vocabs.append(marked_words[index])
         vocabs_translated.append(translated_word.text)
 
-        if index % 5 == 0:
-            print(f"Progress: {index}/{len(marked_words)}")
     except: 
+        print()
         print(f"Could not translate the word: {marked_words[index]}")
+        print()
+        counter += 1
+    if index % 5 == 0:
+            print(f"Progress: {index}/{len(marked_words)}")
 
 print("Translating done!")
-
+trans_perc = (counter / len(marked_words)) * 100
+print(f"No translation for {round(trans_perc, 0)}% of the words provided.")
 print()
