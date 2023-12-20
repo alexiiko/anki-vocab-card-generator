@@ -69,7 +69,7 @@ for index in range(len(marked_words)):
         if index % 5 == 0:
             print(f"Progress: {index}/{len(marked_words)}")
     except: 
-        pass
+        print(f"Could not translate the word: {marked_words[index]}")
 
 print("Translating done!")
 
