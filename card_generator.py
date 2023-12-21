@@ -2,12 +2,18 @@ import genanki
 import requests
 from random import randint
 from translator import vocabs, vocabs_translated, DECK_NAME
+import time
 
 
 def generate_study_cards():
     definition_counter = 0
     example_counter = 0
-    for index in range(len(vocabs)):
+
+    print("Started timer")
+    start_time = time.time()
+
+    index = 0
+    while index < len(vocabs):
         dict_url = f"https://api.dictionaryapi.dev/api/v2/entries/en/{vocabs[index]}"
 
         data = requests.get(dict_url).json()
@@ -63,6 +69,12 @@ def generate_study_cards():
         if index % 5 == 0:
             print(f"Progress: {index}/{len(vocabs)}")
             print()
+
+        index += 1
+
+    end_time = time.time()
+    print()
+    print(f"Finished translating words in {end_time - start_time} seconds")
     
     print()
     examples_percent = (example_counter / len(vocabs)) * 100

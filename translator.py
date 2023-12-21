@@ -2,6 +2,7 @@ import json
 from language_codes import language_codes
 from googletrans import Translator
 from sys import exit
+import time
 
 
 def add_marked_words_to_array():
@@ -15,10 +16,12 @@ def add_marked_words_to_array():
 
 def create_translated_array():
     print("Translating words...")
-    print()
+    start_time = time.time()
 
     counter = 0
-    for index in range(len(marked_words)):
+
+    index = 0
+    while index < len(marked_words):
         try:
             translated_word = translator.translate(marked_words[index], dest=DEST_LANG, src=SOURCE_LANG)
             marked_words_translated.append(translated_word.text)
@@ -29,12 +32,21 @@ def create_translated_array():
             print(f"Could not translate the word: {marked_words[index]}")
             print()
             counter += 1
+
         if index % 5 == 0:
                 print(f"Progress: {index}/{len(marked_words)}")
 
-    print("Translating done!")
+        index += 1 
+
+    print("Translation done!")
     trans_perc = (counter / len(marked_words)) * 100
     print(f"No translation for {round(trans_perc, 0)}% of the words provided.")
+
+    print()
+
+    end_time = time.time()
+    print(f"Finished translating words in {round(end_time - start_time, 0)} seconds")
+
     print()
 
 
