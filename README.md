@@ -1,4 +1,4 @@
-# Anki card generator 🌠
+# Transcardify 🌠
 This is a terminal application for creating Anki cards based on highlights(vocabulary) made in e-books.   
 It uses [google trans](https://pypi.org/project/googletrans/) for translating the words and [genanki](https://github.com/kerrickstaley/genanki) for generating the cards.  
 For providing the definitions the script is making use of the [free dictionary api](https://dictionaryapi.dev/).
