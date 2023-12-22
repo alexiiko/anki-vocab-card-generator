@@ -10,7 +10,7 @@ The executable files are made with [pyinstaller](https://pyinstaller.org/en/stab
 - Have [google trans](https://pypi.org/project/googletrans/) installed 💬
 
 ## How to use ℹ️
-1. Clone the repository
+1. Clone the repository or download the `linux-executable/windows-executable`
 2. Get the highlights of the book in a json format.
     > Use [bookcision](https://readwise.io/bookcision) for the json file 
 3. Follow the instructions displayed in the terminal after running `main.py`.
