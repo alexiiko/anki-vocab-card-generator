@@ -1,8 +1,8 @@
 import json
+import time
 from language_codes import language_codes
 from googletrans import Translator
 from sys import exit
-import time
 
 
 def add_marked_words_to_array():
