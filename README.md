@@ -13,7 +13,7 @@ The executable files are made with [pyinstaller](https://pyinstaller.org/en/stab
 1. Clone the repository or download the `linux-executable/windows-executable`
 2. Get the highlights of the book in a json format.
     > Use [bookcision](https://readwise.io/bookcision) for the json file 
-3. Follow the instructions displayed in the terminal after running `main.py`.
+3. Follow the instructions displayed in the terminal after running `main.py` or the `linux-executable`.
 4. Import the `apkg` file into Anki.
 
 ## Motivation ⛰️
