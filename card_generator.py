@@ -56,16 +56,6 @@ def generate_study_cards():
         )
         deck.add_note(card)
 
-        card = genanki.Note(
-            model=CARD_MODEL,
-            fields= [
-                card_back, # front
-                f"{vocabs_translated[index]}" # back
-            ]
-        )
-
-        deck.add_note(card)
-
         if index % 5 == 0:
             print(f"Progress: {index}/{len(vocabs)}")
             print()
@@ -92,19 +82,31 @@ print("Generating cards...")
 
 # initiate model and deck
 CARD_MODEL = genanki.Model(
-    randint(0,99999),
-    "Simple Model",
-    fields=[
-        {"name": "Question"},
-        {"name": "Answer"},
-    ],
-      templates=[
+  1485830179,
+  'Basic (and reversed card) (genanki)',
+  fields=[
+    {
+      'name': 'Front',
+      'font': 'Arial',
+    },
+    {
+      'name': 'Back',
+      'font': 'Arial',
+    },
+  ],
+  templates=[
     {
       'name': 'Card 1',
-      'qfmt': '{{Question}}',
-      'afmt': '{{FrontSide}}<hr id="answer">{{Answer}}',
+      'qfmt': '{{Front}}',
+      'afmt': '{{FrontSide}}\n\n<hr id=answer>\n\n{{Back}}',
     },
-    ]
+    {
+      'name': 'Card 2',
+      'qfmt': '{{Back}}',
+      'afmt': '{{FrontSide}}\n\n<hr id=answer>\n\n{{Front}}',
+    },
+  ],
+  css='.card {\n font-family: arial;\n font-size: 20px;\n text-align: center;\n color: black;\n background-color: white;\n}\n',
 )
 
 deck = genanki.Deck(
