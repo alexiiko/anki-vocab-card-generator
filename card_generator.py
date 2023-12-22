@@ -64,7 +64,7 @@ def generate_study_cards(card_model, deck):
 
     end_time = time.time()
     print()
-    print(f"Finished translating words in {end_time - start_time} seconds")
+    print(f"Finished generating the cards words in {round(end_time - start_time, 0)} seconds")
     
     print()
     examples_percent = (example_counter / len(vocabs)) * 100
