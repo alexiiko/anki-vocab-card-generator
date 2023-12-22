@@ -1,11 +1,11 @@
 import genanki
 import requests
-from random import randint
-from translator import vocabs, vocabs_translated, DECK_NAME
 import time
+from random import randint
+from translator import *
 
 
-def generate_study_cards():
+def generate_study_cards(card_model, deck):
     definition_counter = 0
     example_counter = 0
 
@@ -48,9 +48,9 @@ def generate_study_cards():
             card_back = f"{vocabs[index]} <br> <br> Definition: {definition} <br> <br> Example: {example}"
 
         card = genanki.Note(
-            model=CARD_MODEL,
+            model=card_model,
             fields= [
-                f"{vocabs_translated[index]}",# front
+                f"{translated_vocabs[index]}",# front
                 card_back # back
             ]
         )
@@ -76,47 +76,49 @@ def generate_study_cards():
     print()
 
 
-print()
+def main():
+    print()
 
-print("Generating cards...")
+    print("Generating cards...")
 
-# initiate model and deck
-CARD_MODEL = genanki.Model(
-  1485830179,
-  'Basic (and reversed card) (genanki)',
-  fields=[
-    {
-      'name': 'Front',
-      'font': 'Arial',
-    },
-    {
-      'name': 'Back',
-      'font': 'Arial',
-    },
-  ],
-  templates=[
-    {
-      'name': 'Card 1',
-      'qfmt': '{{Front}}',
-      'afmt': '{{FrontSide}}\n\n<hr id=answer>\n\n{{Back}}',
-    },
-    {
-      'name': 'Card 2',
-      'qfmt': '{{Back}}',
-      'afmt': '{{FrontSide}}\n\n<hr id=answer>\n\n{{Front}}',
-    },
-  ],
-  css='.card {\n font-family: arial;\n font-size: 20px;\n text-align: center;\n color: black;\n background-color: white;\n}\n',
-)
+    CARD_MODEL = genanki.Model(
+      1485830179,
+      'Basic (and reversed card) (genanki)',
+      fields=[
+        {
+          'name': 'Front',
+          'font': 'Arial',
+        },
+        {
+          'name': 'Back',
+          'font': 'Arial',
+        },
+      ],
+      templates=[
+        {
+          'name': 'Card 1',
+          'qfmt': '{{Front}}',
+          'afmt': '{{FrontSide}}\n\n<hr id=answer>\n\n{{Back}}',
+        },
+        {
+          'name': 'Card 2',
+          'qfmt': '{{Back}}',
+          'afmt': '{{FrontSide}}\n\n<hr id=answer>\n\n{{Front}}',
+        },
+      ],
+      css='.card {\n font-family: arial;\n font-size: 20px;\n text-align: center;\n color: black;\n background-color: white;\n}\n',
+    )
 
-deck = genanki.Deck(
-    randint(0,99999),
-    DECK_NAME
-)
+    deck = genanki.Deck(
+        randint(0,99999),
+        DECK_NAME
+    )
 
-generate_study_cards()
+    generate_study_cards(CARD_MODEL, deck)
 
-# program done
-print("Done! Check the current directory for any 'apkg' file with the chosen deck name.")
 
-genanki.Package(deck).write_to_file(f"{DECK_NAME}.apkg")
+    print("Done! Check the current directory for any 'apkg' file with the chosen deck name.")
+
+    genanki.Package(deck).write_to_file(f"{DECK_NAME}.apkg")
+
+main()

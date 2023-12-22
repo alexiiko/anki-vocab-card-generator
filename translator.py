@@ -6,6 +6,9 @@ import time
 
 
 def add_marked_words_to_array():
+    FILE_NAME = input("JSON file path with file name: ")
+    highlights = generate_json_object(FILE_NAME)
+    marked_words = []
     for entry in highlights:
         try:
             marked_words.append(entry["text"].lower().lstrip("to").strip("’´,.;:_?!$%&/()[]{}+*#"))
@@ -13,25 +16,30 @@ def add_marked_words_to_array():
             print("ERROR: Json file does not correspond to the json schema.")
             exit()
 
+    return marked_words
 
-def create_translated_array():
+
+def create_translated_array(dest_lang: str, source_lang: str, marked_words: list):
+    translator = Translator()
+
+    vocabs_translated = []
+    vocabs = []
     print("Translating words...")
     start_time = time.time()
 
-    counter = 0
+    translation_counter = 0
 
     index = 0
     while index < len(marked_words):
         try:
-            translated_word = translator.translate(marked_words[index], dest=DEST_LANG, src=SOURCE_LANG)
-            marked_words_translated.append(translated_word.text)
+            translated_word = translator.translate(marked_words[index], dest=dest_lang, src=source_lang)
             vocabs.append(marked_words[index])
             vocabs_translated.append(translated_word.text)
         except: 
             print()
             print(f"Could not translate the word: {marked_words[index]}")
             print()
-            counter += 1
+            translation_counter += 1
 
         if index % 5 == 0:
                 print(f"Progress: {index}/{len(marked_words)}")
@@ -39,7 +47,7 @@ def create_translated_array():
         index += 1 
 
     print("Translation done!")
-    trans_perc = (counter / len(marked_words)) * 100
+    trans_perc = (translation_counter / len(marked_words)) * 100
     print(f"No translation for {round(trans_perc, 0)}% of the words provided.")
 
     print()
@@ -49,10 +57,12 @@ def create_translated_array():
 
     print()
 
+    return vocabs, vocabs_translated 
 
-def generate_json_object() -> list:
+
+def generate_json_object(file_name) -> list:
     try:
-        with open(FILE_NAME, "r") as json_file:
+        with open(file_name, "r") as json_file:
             try:
                 json_object = json.load(json_file)
                 return json_object["highlights"]
@@ -64,48 +74,19 @@ def generate_json_object() -> list:
         exit()
 
 
-def translate_words():
-    add_marked_words_to_array()
-    create_translated_array()
+def create_langs():
+    dest_lang_input = input("Destinated language: ")
+    source_lang_input = input("Source language: ")
+
+    if source_lang_input.lower() in language_codes and dest_lang_input.lower() in language_codes:
+        return dest_lang_input, source_lang_input
+    else:
+        print("ERROR: Source or destinated language not available")
+        exit()
 
 
-# initiate every variable
-FILE_NAME = input("JSON file path with file name: ")
-highlights = generate_json_object()
-
-SOURCE_LANG = ""
-DEST_LANG = ""
-
-source_lang_input = input("Source language: ")
-
-# check if the language is available
-if source_lang_input.lower() in language_codes:
-    SOURCE_LANG = source_lang_input
-else:
-    print("ERROR: Source language not available")
-    exit()
-
-dest_lang_input = input("Destinated language: ")
-
-# check if the language is available
-if dest_lang_input.lower() in language_codes:
-    DEST_LANG = dest_lang_input
-else:
-    print("ERROR: Destinated language not available")
-    exit()
-
+marked_words_list = add_marked_words_to_array() 
+DEST_LANG, SOURCE_LANG = create_langs() 
 DECK_NAME = input("Deck name: ")
 
-
-translator = Translator()
-
-marked_words = []
-
-marked_words_translated = []
-
-vocabs = []
-
-vocabs_translated = []
-
-
-translate_words()
+vocabs, translated_vocabs = create_translated_array(DEST_LANG, SOURCE_LANG, marked_words_list)
