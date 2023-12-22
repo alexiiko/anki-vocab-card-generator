@@ -3,76 +3,85 @@ import requests
 import time
 from random import randint
 from translator import *
+from concurrent.futures import ThreadPoolExecutor
+
+def generate_study_cards_worker(args):
+    index, vocabs, translated_vocabs, card_model, deck, definition_counter, example_counter = args
+
+    dict_url = f"https://api.dictionaryapi.dev/api/v2/entries/en/{vocabs[index]}"
+    data = requests.get(dict_url).json()
+
+    definition = ""
+    example = ""
+
+    try:
+        definition = data[0]["meanings"][0]["definitions"][0]["definition"]
+    except:
+        definition = ""
+        print(f"No definition provided for the word: {vocabs[index]}")
+        print()
+        definition_counter += 1
+
+    try:
+        example = data[0]["meanings"][0]["definitions"][0]["example"]
+    except:
+        example = ""
+        print(f"No example provided for the word: {vocabs[index]}")
+        print()
+        example_counter += 1
+
+    card_back = ""
+    if example == "":
+        card_back = f"{vocabs[index]} <br> <br> Definition: {definition}"
+    elif definition == "":
+        card_back = f"{vocabs[index]} <br> <br> Example: {example}"
+    elif definition == "" and example == "":
+        card_back = f"{vocabs[index]}"
+    else:
+        card_back = f"{vocabs[index]} <br> <br> Definition: {definition} <br> <br> Example: {example}"
+
+    card = genanki.Note(
+        model=card_model,
+        fields=[
+            f"{translated_vocabs[index]}",  # front
+            card_back  # back
+        ]
+    )
+    deck.add_note(card)
+
+    if index % 5 == 0:
+        print(f"Progress: {index}/{len(vocabs)}")
+        print()
+
+    return definition_counter, example_counter
 
 
 def generate_study_cards(card_model, deck):
     definition_counter = 0
     example_counter = 0
 
-    print("Started timer")
     start_time = time.time()
 
-    index = 0
-    while index < len(vocabs):
-        dict_url = f"https://api.dictionaryapi.dev/api/v2/entries/en/{vocabs[index]}"
+    thread_args = [(i, vocabs, translated_vocabs, card_model, deck, definition_counter, example_counter) for i in range(len(vocabs))]
 
-        data = requests.get(dict_url).json()
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        results = executor.map(generate_study_cards_worker, thread_args)
 
-        definition = ""
-        example = ""
-
-        try:
-            definition = data[0]["meanings"][0]["definitions"][0]["definition"]
-        except:
-            definition = ""
-            print(f"No definition provided for the word: {vocabs[index]}")
-            print()
-            definition_counter += 1
-
-        try:
-            example = data[0]["meanings"][0]["definitions"][0]["example"]
-        except:
-            example = ""
-            print(f"No example provided for the word: {vocabs[index]}")
-            print()
-            example_counter += 1 
-
-        card_back = ""
-        if example == "":
-            card_back = f"{vocabs[index]} <br> <br> Definition: {definition}" 
-        elif definition == "":
-            card_back = f"{vocabs[index]} <br> <br> Example: {example}"
-        elif definition == "" and example == "":
-            card_back = f"{vocabs[index]}"
-        else:
-            card_back = f"{vocabs[index]} <br> <br> Definition: {definition} <br> <br> Example: {example}"
-
-        card = genanki.Note(
-            model=card_model,
-            fields= [
-                f"{translated_vocabs[index]}",# front
-                card_back # back
-            ]
-        )
-        deck.add_note(card)
-
-        if index % 5 == 0:
-            print(f"Progress: {index}/{len(vocabs)}")
-            print()
-
-        index += 1
+    for result in results:
+        num1, num2 = result
+        definition_counter += num1 
+        example_counter += num2
 
     end_time = time.time()
     print()
     print(f"Finished generating the cards words in {round(end_time - start_time, 0)} seconds")
-    
+
     print()
     examples_percent = (example_counter / len(vocabs)) * 100
     definitions_percent = (definition_counter / len(vocabs)) * 100
 
     print(f"No definition provided for {round(definitions_percent, 0)}% of the words.")
     print(f"No example provided for {round(examples_percent, 0)}% of the words.")
-
     print()
 
 
@@ -110,12 +119,11 @@ def main():
     )
 
     deck = genanki.Deck(
-        randint(0,99999),
+        randint(0, 99999),
         DECK_NAME
     )
 
     generate_study_cards(CARD_MODEL, deck)
-
 
     print("Done! Check the current directory for any 'apkg' file with the chosen deck name.")
 
