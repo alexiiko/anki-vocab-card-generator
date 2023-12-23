@@ -30,15 +30,12 @@ def generate_study_cards_worker(args):
         print()
         example_counter += 1
 
-    card_back = ""
-    if example == "":
-        card_back = f"{vocabs[index]} <br> <br> Definition: {definition}"
-    elif definition == "":
-        card_back = f"{vocabs[index]} <br> <br> Example: {example}"
-    elif definition == "" and example == "":
-        card_back = f"{vocabs[index]}"
-    else:
-        card_back = f"{vocabs[index]} <br> <br> Definition: {definition} <br> <br> Example: {example}"
+    card_back = f"{vocabs[index]}"
+
+    if not definition == "":
+        card_back += f" <br> <br> Definition: {definition}"
+    if not example == "":
+        card_back += f" <br> <br> Example: {example}"
 
     card = genanki.Note(
         model=card_model,
