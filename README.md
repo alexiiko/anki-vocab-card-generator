@@ -8,6 +8,7 @@ The executable files are made with [pyinstaller](https://pyinstaller.org/en/stab
 ## Prerequisites ✋
 - Have [python](https://www.python.org/downloads/) installed 🐍
 - Have [google trans](https://pypi.org/project/googletrans/) installed 💬
+- Have [genanki](https://github.com/kerrickstaley/genanki) installed 👷
 
 ## How to use ℹ️
 1. Clone the repository or download the `linux-executable/windows-executable`
